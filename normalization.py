@@ -53,7 +53,7 @@ def find_hyperplane_intercepts(evaluations, z_max):
     intercepts = np.zeros(num_objs)
 
     #check if duplicated individuals
-    if np.all(evaluations == np.unique(evaluations, axis=0)):
+    if np.unique(evaluations, axis=0).shape[0] < evaluations.shape[0]:
         for j in range(num_objs):
             intercepts[j] = z_max[j][j]
     else:

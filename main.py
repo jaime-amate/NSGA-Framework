@@ -30,12 +30,13 @@ if __name__ == '__main__':
         combine_population_real_representation
     )
 
+    nsga.run_nsga_iii()
+
     pareto_front_points = nsga.points_per_front[0]
     pareto_front_evaluations = nsga.evaluations[pareto_front_points]
     pareto_front = nsga.fronts[pareto_front_points]
     evaluations = nsga.evaluations
 
-    print('Computation time: ', end-begin)
     print(evaluations)
     #plot_benchmark_evaluations(evaluations, problem)
     plot_3d_evaluations(evaluations, problem)

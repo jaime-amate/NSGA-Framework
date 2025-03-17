@@ -1,0 +1,18 @@
+# Byte-compiled files
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+
+# Logs
+*.log
+*.out
+*.err
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+desktop.ini

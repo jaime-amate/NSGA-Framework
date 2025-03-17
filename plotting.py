@@ -45,6 +45,7 @@ def plot_3d_evaluations(evaluations, problem):
     ax.scatter(x,y,z, color='navy', marker='o')
 
     # final figure details
+    plt.title(problem.get_name())
     ax.set_xlabel('$f_1()$', fontsize=15)
     ax.set_ylabel('$f_2()$', fontsize=15)
     ax.set_zlabel('$f_3()$', fontsize=15)

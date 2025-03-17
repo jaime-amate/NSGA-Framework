@@ -1,11 +1,9 @@
 import numpy as np
 from crowding import crowding_distance_assignment
 from normalization import normalize
-from niching import associate, associate_dask, associate_to_niche
-
+from niching import associate, associate_to_niche
 
 class NSGAII:
-
     def generate_structured_points(self, points_per_front, population_size, evaluations):
         structured_points = []
         front_counter = 0
@@ -104,7 +102,7 @@ class NSGAIII:
                                                z_min, z_max)
 
             reference_points_assignment, association_counts_structured_points, association_counts_next_generation, reference_points_perpencidular_distances = \
-                associate_dask(structured_points, normalized_evaluations, reference_points, next_generation)
+                associate(structured_points, normalized_evaluations, reference_points, next_generation)
 
             selected_points = \
                 associate_to_niche(structured_points, association_counts_next_generation,

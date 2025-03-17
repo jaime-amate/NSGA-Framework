@@ -1,4 +1,3 @@
-import copy
 import numpy
 
 def generate_reference_points(nobj, p, scaling=None):

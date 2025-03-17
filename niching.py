@@ -1,10 +1,7 @@
 import numpy as np
 from operator import itemgetter
 import random
-import dask
-from numba import jit
 
-#@jit(nogil=True)
 def perpendicular_distance(direction, point):
     k = np.dot(direction, point) / np.sum(np.power(direction, 2))
     d = np.sum(np.power(np.subtract(np.multiply(direction, [k] * len(direction)), point), 2))
@@ -42,7 +39,6 @@ def associate(structured_points, normalized_evaluations, reference_points, next_
 
     return reference_points_assignment, association_counts_structured_points, association_counts_next_generation, reference_points_perpencidular_distances
 
-#@jit(nogil=True)
 def compute_closest_reference_point(point, reference_points):
     #compute distances between the point i in St and all the reference points
     reference_points_distances = [perpendicular_distance(point, reference_point) for reference_point in reference_points]
@@ -50,32 +46,6 @@ def compute_closest_reference_point(point, reference_points):
     nearest_reference_point = np.argmin(reference_points_distances)
 
     return nearest_reference_point, reference_points_distances[nearest_reference_point]
-
-
-def associate_dask(structured_points, normalized_evaluations, reference_points, next_generation):
-    association_counts_next_generation = np.zeros(len(reference_points))
-    association_counts_structured_points = np.zeros(len(reference_points))
-
-    delayed_reference_points = dask.delayed(reference_points)
-
-    delayed_results = [
-        dask.delayed(compute_closest_reference_point)(normalized_evaluations[i], delayed_reference_points) for i in
-        range(len(structured_points))]
-
-    results = dask.compute(*delayed_results)
-    results = np.asarray(results)
-
-    reference_points_assignment = results[:, 0].astype('int')
-    reference_points_perpencidular_distances = results[:, 1]
-
-    unique_counts, counts_elements = np.unique(reference_points_assignment, return_counts=True)
-    association_counts_structured_points[unique_counts] = counts_elements
-
-    unique_counts, counts_elements = np.unique(
-        reference_points_assignment[np.where(structured_points == next_generation)], return_counts=True)
-    association_counts_next_generation[unique_counts] = counts_elements
-
-    return reference_points_assignment, association_counts_structured_points, association_counts_next_generation, reference_points_perpencidular_distances
 
 def associate_to_niche(structured_points, association_counts_next_generation, reference_points_assignment, reference_points_perpencidular_distances, last_front_points, last_front_index,num_K):
     selected_last_front_points = set()
@@ -88,16 +58,10 @@ def associate_to_niche(structured_points, association_counts_next_generation, re
         #print("Association counts to Next generation (Pt+1)", association_counts_next_generation)
 
         if association_counts_next_generation[min_reference_point] == 0:
-            '''
-            points_associated_minimum_niche = []
-            for i in range(last_front_index, len(structured_points)):
-                if reference_points_assignment[i] == min_reference_point:
-                    points_associated_minimum_niche.append(i)
-            '''
             points_associated_minimum_niche = [i for i in range(last_front_index, len(structured_points)) if reference_points_assignment[i] == min_reference_point]
 
             if len(points_associated_minimum_niche) == 0:
-                association_counts_next_generation[min_reference_point] = np.Inf
+                association_counts_next_generation[min_reference_point] = np.inf
             else:
                 perpendicular_distances = [(point, reference_points_perpencidular_distances[point]) for point in
                                            points_associated_minimum_niche]

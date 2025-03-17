@@ -3,7 +3,6 @@ from non_dominated_sort import fast_non_dominated_sort
 from selection import crowded_binary_tournament, rank_binary_tournament
 from reference_points import generate_reference_points
 from algorithms import NSGAII, NSGAIII
-from dask.distributed import Client
 
 class NSGAFramework:
     def __init__(self, population_size, p_mutation, num_objs, n, max_num_iterations, objective_function, generate_initial_population, crossover_operator, mutation_operator, target_functions, c_distribution_index, m_distribution_index, combine_method):
@@ -82,8 +81,8 @@ class NSGAFramework:
         self.reference_points = generate_reference_points(self.num_objs, 12)
         self.num_reference_points = len(self.reference_points)
 
-        self.z_min = np.full((self.num_objs), np.Inf)
-        self.z_max = np.full((self.num_objs, self.num_objs), np.NINF)
+        self.z_min = np.full((self.num_objs), np.inf)
+        self.z_max = np.full((self.num_objs, self.num_objs), -np.inf)
 
         # random parent population (P0) is created
         self.population_representation = self.generate_initial_population(self.population_size)
